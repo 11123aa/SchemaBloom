@@ -1,0 +1,263 @@
+{
+  "name": "E-commerce Database",
+  "description": "Схема базы данных для интернет-магазина",
+  "tables": [
+    {
+      "name": "categories",
+      "description": "Категории товаров",
+      "fields": [
+        {
+          "name": "id",
+          "type": "integer",
+          "is_primary_key": true,
+          "is_nullable": false,
+          "description": "Уникальный идентификатор категории"
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "is_nullable": false,
+          "description": "Название категории"
+        },
+        {
+          "name": "slug",
+          "type": "string",
+          "is_unique": true,
+          "is_nullable": false,
+          "description": "URL-дружественное название"
+        },
+        {
+          "name": "description",
+          "type": "text",
+          "is_nullable": true,
+          "description": "Описание категории"
+        },
+        {
+          "name": "parent_id",
+          "type": "integer",
+          "is_nullable": true,
+          "description": "ID родительской категории"
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "is_nullable": false,
+          "default_value": "now()",
+          "description": "Дата создания"
+        }
+      ]
+    },
+    {
+      "name": "products",
+      "description": "Товары",
+      "fields": [
+        {
+          "name": "id",
+          "type": "integer",
+          "is_primary_key": true,
+          "is_nullable": false,
+          "description": "Уникальный идентификатор товара"
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "is_nullable": false,
+          "description": "Название товара"
+        },
+        {
+          "name": "slug",
+          "type": "string",
+          "is_unique": true,
+          "is_nullable": false,
+          "description": "URL-дружественное название"
+        },
+        {
+          "name": "description",
+          "type": "text",
+          "is_nullable": true,
+          "description": "Описание товара"
+        },
+        {
+          "name": "price",
+          "type": "float",
+          "is_nullable": false,
+          "description": "Цена товара"
+        },
+        {
+          "name": "stock_quantity",
+          "type": "integer",
+          "is_nullable": false,
+          "default_value": "0",
+          "description": "Количество на складе"
+        },
+        {
+          "name": "category_id",
+          "type": "integer",
+          "is_nullable": false,
+          "description": "ID категории"
+        },
+        {
+          "name": "is_active",
+          "type": "boolean",
+          "is_nullable": false,
+          "default_value": "true",
+          "description": "Активен ли товар"
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "is_nullable": false,
+          "default_value": "now()",
+          "description": "Дата создания"
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "is_nullable": false,
+          "default_value": "now()",
+          "description": "Дата обновления"
+        }
+      ]
+    },
+    {
+      "name": "orders",
+      "description": "Заказы",
+      "fields": [
+        {
+          "name": "id",
+          "type": "integer",
+          "is_primary_key": true,
+          "is_nullable": false,
+          "description": "Уникальный идентификатор заказа"
+        },
+        {
+          "name": "order_number",
+          "type": "string",
+          "is_unique": true,
+          "is_nullable": false,
+          "description": "Номер заказа"
+        },
+        {
+          "name": "customer_id",
+          "type": "integer",
+          "is_nullable": false,
+          "description": "ID покупателя"
+        },
+        {
+          "name": "total_amount",
+          "type": "float",
+          "is_nullable": false,
+          "description": "Общая сумма заказа"
+        },
+        {
+          "name": "status",
+          "type": "string",
+          "is_nullable": false,
+          "default_value": "'pending'",
+          "description": "Статус заказа"
+        },
+        {
+          "name": "shipping_address",
+          "type": "text",
+          "is_nullable": false,
+          "description": "Адрес доставки"
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "is_nullable": false,
+          "default_value": "now()",
+          "description": "Дата создания"
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "is_nullable": false,
+          "default_value": "now()",
+          "description": "Дата обновления"
+        }
+      ]
+    },
+    {
+      "name": "order_items",
+      "description": "Элементы заказа",
+      "fields": [
+        {
+          "name": "id",
+          "type": "integer",
+          "is_primary_key": true,
+          "is_nullable": false,
+          "description": "Уникальный идентификатор элемента заказа"
+        },
+        {
+          "name": "order_id",
+          "type": "integer",
+          "is_nullable": false,
+          "description": "ID заказа"
+        },
+        {
+          "name": "product_id",
+          "type": "integer",
+          "is_nullable": false,
+          "description": "ID товара"
+        },
+        {
+          "name": "quantity",
+          "type": "integer",
+          "is_nullable": false,
+          "description": "Количество"
+        },
+        {
+          "name": "unit_price",
+          "type": "float",
+          "is_nullable": false,
+          "description": "Цена за единицу"
+        },
+        {
+          "name": "total_price",
+          "type": "float",
+          "is_nullable": false,
+          "description": "Общая цена"
+        }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "name": "CategoryProducts",
+      "type": "one_to_many",
+      "table": "categories",
+      "related_table": "products",
+      "field_name": "products",
+      "foreign_key": "category_id",
+      "referenced_key": "id"
+    },
+    {
+      "name": "CategorySubcategories",
+      "type": "one_to_many",
+      "table": "categories",
+      "related_table": "categories",
+      "field_name": "subcategories",
+      "foreign_key": "parent_id",
+      "referenced_key": "id"
+    },
+    {
+      "name": "OrderItems",
+      "type": "one_to_many",
+      "table": "orders",
+      "related_table": "order_items",
+      "field_name": "items",
+      "foreign_key": "order_id",
+      "referenced_key": "id"
+    },
+    {
+      "name": "ProductOrderItems",
+      "type": "one_to_many",
+      "table": "products",
+      "related_table": "order_items",
+      "field_name": "order_items",
+      "foreign_key": "product_id",
+      "referenced_key": "id"
+    }
+  ]
+} 

@@ -16,6 +16,7 @@ json-to-orm generate schema.json models/ --format sqlalchemy
 # Примеры
 json-to-orm generate examples/sample_schema.json output/ --format prisma
 json-to-orm generate examples/sample_schema.json output/ --format django
+json-to-orm generate examples/ecommerce_schema.json output/ --format sqlalchemy
 json-to-orm validate examples/sample_schema.json
 json-to-orm list-formats
 ```
