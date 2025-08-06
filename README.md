@@ -12,17 +12,9 @@ pip install json-to-orm
 json-to-orm generate --input schema.json --output models/ --format prisma
 ```
 
-## 📚 Документация
-
-- [Архитектура проекта](docs/Project.md)
-- [Архитектурные решения](docs/architectural_decisions.md)
-- [Отслеживание задач](docs/Tasktracker.md)
-- [Журнал изменений](docs/changelog.md)
-
 ## 🔗 Ссылки
 
 - **Репозиторий**: https://github.com/11123aa/SchemaBloom.git
-- **Документация**: [docs/](docs/)
 
 ## 📋 Статус проекта
 
