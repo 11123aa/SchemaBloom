@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "json-to-orm"
-version = "0.1.0"
+version = "1.0.0"
 description = "CLI-утилита для генерации ORM моделей из JSON-схем"
 readme = "README.md"
 license = {text = "MIT"}
@@ -16,7 +16,7 @@ maintainers = [
 ]
 keywords = ["orm", "json", "generator", "cli", "prisma", "django", "sqlalchemy"]
 classifiers = [
-    "Development Status :: 3 - Alpha",
+    "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
