@@ -211,7 +211,7 @@ class BaseGenerator(ABC):
         Returns:
             True если поле является первичным ключом
         """
-        return field.get("primary_key", False)
+        return field.get("is_primary_key", False)
 
     def is_nullable(self, field: Dict[str, Any]) -> bool:
         """
@@ -223,7 +223,7 @@ class BaseGenerator(ABC):
         Returns:
             True если поле может быть null
         """
-        return field.get("nullable", True)
+        return field.get("is_nullable", True)
 
     def is_unique(self, field: Dict[str, Any]) -> bool:
         """
@@ -235,7 +235,7 @@ class BaseGenerator(ABC):
         Returns:
             True если поле уникальное
         """
-        return field.get("unique", False)
+        return field.get("is_unique", False)
 
     def get_default_value(self, field: Dict[str, Any]) -> Optional[str]:
         """
@@ -247,7 +247,7 @@ class BaseGenerator(ABC):
         Returns:
             Значение по умолчанию или None
         """
-        return field.get("default")
+        return field.get("default_value")
 
     def get_relationships_for_table(
         self, table_name: str, relationships: List[Dict[str, Any]]

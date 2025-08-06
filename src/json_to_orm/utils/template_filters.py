@@ -95,6 +95,9 @@ def prisma_type(value: str) -> str:
     Returns:
         Prisma тип данных
     """
+    if value is None:
+        return "String"
+        
     type_mapping = {
         "string": "String",
         "integer": "Int",
@@ -126,6 +129,9 @@ def django_type(value: str) -> str:
     Returns:
         Django тип данных
     """
+    if value is None:
+        return "CharField"
+        
     type_mapping = {
         "string": "CharField",
         "integer": "IntegerField",
@@ -156,6 +162,9 @@ def sqlalchemy_type(value: str) -> str:
     Returns:
         SQLAlchemy тип данных
     """
+    if value is None:
+        return "String"
+        
     type_mapping = {
         "string": "String",
         "integer": "Integer",

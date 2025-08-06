@@ -99,6 +99,54 @@ class PrismaGenerator(BaseGenerator):
         
         return processed_table
 
+    def get_relationships_for_table(
+        self, table_name: str, relationships: List[Dict[str, Any]]
+    ) -> List[Dict[str, Any]]:
+        """
+        Получает связи для конкретной таблицы.
+
+        Args:
+            table_name: Имя таблицы
+            relationships: Список всех связей
+
+        Returns:
+            Список связей для таблицы
+        """
+        table_relationships = []
+
+        for rel in relationships:
+            if rel.get("table") == table_name or rel.get("related_table") == table_name:
+                # Определяем тип связи для текущей таблицы
+                if rel.get("table") == table_name:
+                    # Это "from" сторона связи
+                    if rel.get("type") == "one_to_many":
+                        rel_type = "one_to_many"
+                    elif rel.get("type") == "many_to_one":
+                        rel_type = "many_to_one"
+                    else:
+                        rel_type = rel.get("type", "one_to_many")
+                else:
+                    # Это "to" сторона связи
+                    if rel.get("type") == "one_to_many":
+                        rel_type = "many_to_one"
+                    elif rel.get("type") == "many_to_one":
+                        rel_type = "one_to_many"
+                    else:
+                        rel_type = rel.get("type", "many_to_one")
+                
+                processed_rel = {
+                    "name": rel.get("name"),
+                    "type": rel_type,
+                    "table": rel.get("table"),
+                    "related_table": rel.get("related_table"),
+                    "field_name": rel.get("field_name"),
+                    "foreign_key": rel.get("foreign_key"),
+                    "referenced_key": rel.get("referenced_key")
+                }
+                table_relationships.append(processed_rel)
+
+        return table_relationships
+
     def get_supported_types(self) -> Dict[str, str]:
         """
         Возвращает словарь поддерживаемых типов данных Prisma.

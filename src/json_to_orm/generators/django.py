@@ -158,7 +158,7 @@ class DjangoGenerator(BaseGenerator):
             else:
                 return "TextField"
         elif field_type == "integer":
-            if field.get("primary_key"):
+            if field.get("is_primary_key"):
                 return "AutoField"
             else:
                 return "IntegerField"
@@ -184,17 +184,17 @@ class DjangoGenerator(BaseGenerator):
             params["max_length"] = field["max_length"]
         
         # Значение по умолчанию
-        if field.get("default") is not None:
-            params["default"] = field["default"]
+        if field.get("default_value") is not None:
+            params["default"] = field["default_value"]
         
         # Уникальность
-        if field.get("unique"):
+        if field.get("is_unique"):
             params["unique"] = True
         
         # Nullable
-        if field.get("nullable") is False:
+        if field.get("is_nullable") is False:
             params["null"] = False
-        elif field.get("nullable") is True:
+        elif field.get("is_nullable") is True:
             params["null"] = True
         
         # Blank (для форм)

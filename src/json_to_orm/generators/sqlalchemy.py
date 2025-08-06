@@ -34,9 +34,118 @@ class SQLAlchemyGenerator(BaseGenerator):
         Returns:
             Список путей к созданным файлам
         """
-        # TODO: Реализовать генерацию SQLAlchemy моделей
-        self.logger.info("Генерация SQLAlchemy моделей пока не реализована")
-        return []
+        if not self.validate_schema(schema_data):
+            self.logger.error("Схема данных невалидна для SQLAlchemy генератора")
+            return []
+
+        # Создаем выходную директорию
+        output_path = self.create_output_directory(output_dir)
+        
+        # Подготавливаем данные для шаблона
+        tables = schema_data.get("tables", [])
+        processed_tables = []
+        
+        for table in tables:
+            processed_table = self._process_table(table, schema_data.get("relationships", []))
+            processed_tables.append(processed_table)
+        
+        # Рендерим шаблон моделей
+        template = self.template_engine.get_template("sqlalchemy/models.py.j2")
+        content = template.render(tables=processed_tables)
+        
+        # Сохраняем файл
+        file_path = output_path / f"models{self.get_file_extension()}"
+        self.write_file(file_path, content)
+        
+        self.logger.info(f"Создан файл SQLAlchemy моделей: {file_path}")
+        return [str(file_path)]
+
+    def _process_table(self, table: Dict[str, Any], relationships: List[Dict[str, Any]]) -> Dict[str, Any]:
+        """
+        Обрабатывает таблицу для шаблона.
+        
+        Args:
+            table: Данные таблицы
+            relationships: Список связей
+            
+        Returns:
+            Обработанная таблица
+        """
+        processed_table = {
+            "name": self.get_table_name(table),
+            "fields": [],
+            "relationships": []
+        }
+        
+        # Обрабатываем поля
+        for field in table.get("fields", []):
+            processed_field = {
+                "name": self.get_field_name(field),
+                "type": self.get_field_type(field),
+                "is_primary_key": self.is_primary_key(field),
+                "is_unique": self.is_unique(field),
+                "is_nullable": self.is_nullable(field),
+                "default_value": self.get_default_value(field),
+                "max_length": field.get("max_length"),
+                "description": field.get("description")
+            }
+            processed_table["fields"].append(processed_field)
+        
+        # Обрабатываем связи для этой таблицы
+        table_relationships = self.get_relationships_for_table(
+            processed_table["name"], relationships
+        )
+        processed_table["relationships"] = table_relationships
+        
+        return processed_table
+
+    def get_relationships_for_table(
+        self, table_name: str, relationships: List[Dict[str, Any]]
+    ) -> List[Dict[str, Any]]:
+        """
+        Получает связи для конкретной таблицы.
+
+        Args:
+            table_name: Имя таблицы
+            relationships: Список всех связей
+
+        Returns:
+            Список связей для таблицы
+        """
+        table_relationships = []
+
+        for rel in relationships:
+            if rel.get("table") == table_name or rel.get("related_table") == table_name:
+                # Определяем тип связи для текущей таблицы
+                if rel.get("table") == table_name:
+                    # Это "from" сторона связи
+                    if rel.get("type") == "one_to_many":
+                        rel_type = "one_to_many"
+                    elif rel.get("type") == "many_to_one":
+                        rel_type = "many_to_one"
+                    else:
+                        rel_type = rel.get("type", "one_to_many")
+                else:
+                    # Это "to" сторона связи
+                    if rel.get("type") == "one_to_many":
+                        rel_type = "many_to_one"
+                    elif rel.get("type") == "many_to_one":
+                        rel_type = "one_to_many"
+                    else:
+                        rel_type = rel.get("type", "many_to_one")
+                
+                processed_rel = {
+                    "name": rel.get("name"),
+                    "type": rel_type,
+                    "table": rel.get("table"),
+                    "related_table": rel.get("related_table"),
+                    "field_name": rel.get("field_name"),
+                    "foreign_key": rel.get("foreign_key"),
+                    "referenced_key": rel.get("referenced_key")
+                }
+                table_relationships.append(processed_rel)
+
+        return table_relationships
 
     def get_supported_types(self) -> Dict[str, str]:
         """
