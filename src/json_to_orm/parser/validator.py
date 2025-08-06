@@ -275,14 +275,20 @@ class SchemaValidator:
                 continue
 
             # Проверяем обязательные поля связи
-            required_fields = ["table", "related_table", "type"]
-            for field in required_fields:
-                if field not in relationship:
-                    self.errors.append(f"Связь {i} не имеет поля '{field}'")
-                    continue
+            # Поддерживаем оба формата: table/related_table и from/to
+            if "table" in relationship and "related_table" in relationship:
+                from_table = relationship["table"]
+                to_table = relationship["related_table"]
+            elif "from" in relationship and "to" in relationship:
+                from_table = relationship["from"]
+                to_table = relationship["to"]
+            else:
+                self.errors.append(f"Связь {i} должна иметь поля 'table'/'related_table' или 'from'/'to'")
+                continue
 
-            from_table = relationship["table"]
-            to_table = relationship["related_table"]
+            if "type" not in relationship:
+                self.errors.append(f"Связь {i} не имеет поля 'type'")
+                continue
             rel_type = relationship["type"]
 
             # Проверяем существование таблиц

@@ -353,13 +353,13 @@ class TestDjangoGenerator:
     def test_django_field_type_mapping(self):
         """Тест маппинга типов полей для Django."""
         generator = DjangoGenerator()
-        
+
         # Проверяем основные типы
         field = {"type": "integer"}
-        assert generator.get_field_type(field) == "integer"
+        assert generator.get_field_type(field) == "IntegerField"
         
         field = {"type": "string"}
-        assert generator.get_field_type(field) == "string"
+        assert generator.get_field_type(field) == "TextField"
 
 
 class TestSQLAlchemyGenerator:

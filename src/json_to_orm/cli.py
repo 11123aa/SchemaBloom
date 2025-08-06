@@ -170,11 +170,18 @@ def list_formats() -> None:
         table.add_column("Описание", style="white")
         table.add_column("Расширение файла", style="green")
 
-        formats = [
-            ("prisma", "Prisma Schema", ".prisma"),
-            ("django", "Django Models", ".py"),
-            ("sqlalchemy", "SQLAlchemy Models", ".py"),
-        ]
+        # Создание экземпляра конвертера для получения информации о форматах
+        converter = JSONToORM()
+        
+        formats = []
+        for format_name in converter.get_supported_formats():
+            format_info = converter.get_format_info(format_name)
+            if format_info:
+                formats.append((
+                    format_name,
+                    format_info["description"],
+                    format_info["extension"]
+                ))
 
         for format_name, description, extension in formats:
             table.add_row(format_name, description, extension)

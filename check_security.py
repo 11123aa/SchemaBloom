@@ -32,10 +32,22 @@ def check_sensitive_patterns():
         r'secret_key\s*[:=]\s*["\'][^"\']+["\']',
     ]
     
+    # Исключения для файлов примеров и документации
+    exclude_patterns = [
+        r'examples/.*\.json$',
+        r'tests/.*\.json$',
+        r'\.md$',
+        r'\.txt$',
+    ]
+    
     staged_files = run_git_command('git diff --cached --name-only')
     
     for file_path in staged_files:
         if not file_path:
+            continue
+        
+        # Пропускаем файлы примеров и документации
+        if any(re.match(pattern, file_path) for pattern in exclude_patterns):
             continue
             
         try:

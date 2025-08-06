@@ -47,6 +47,25 @@ def snake_case(value: str) -> str:
     return value.lower()
 
 
+def title_case(value: str) -> str:
+    """
+    Преобразует строку в Title Case.
+    
+    Args:
+        value: Исходная строка
+        
+    Returns:
+        Строка в Title Case
+    """
+    if not value:
+        return value
+    
+    # Разбиваем по подчеркиваниям и дефисам
+    words = re.split(r'[_-]', value)
+    # Капитализируем каждое слово
+    return ' '.join(word.capitalize() for word in words)
+
+
 def camel_case(value: str) -> str:
     """
     Преобразует строку в camelCase.
@@ -215,6 +234,7 @@ FILTERS = {
     "pascal_case": pascal_case,
     "snake_case": snake_case,
     "camel_case": camel_case,
+    "title_case": title_case,
     "prisma_type": prisma_type,
     "django_type": django_type,
     "sqlalchemy_type": sqlalchemy_type,

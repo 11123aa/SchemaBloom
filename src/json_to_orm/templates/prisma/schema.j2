@@ -14,6 +14,7 @@ datasource db {
 model {{ table.name | pascal_case }} {
   {% for field in table.fields %}
   {{ field.name | snake_case }} {{ field.type | prisma_type }}{% if field.is_primary_key %} @id{% endif %}{% if field.is_unique %} @unique{% endif %}{% if not field.is_nullable and field.default_value %} @default({{ field.default_value }}){% endif %}{% if field.relation %}{% if field.relation.type == "one_to_many" %} @relation("{{ field.relation.name }}"){% endif %}{% endif %}
+
   {% endfor %}
   
   {% if table.relationships %}
