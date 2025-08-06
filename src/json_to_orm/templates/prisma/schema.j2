@@ -1,0 +1,35 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+{% for table in tables %}
+model {{ table.name | pascal_case }} {
+  {% for field in table.fields %}
+  {{ field.name | snake_case }} {{ field.type | prisma_type }}{% if field.is_primary_key %} @id{% endif %}{% if field.is_unique %} @unique{% endif %}{% if not field.is_nullable and field.default_value %} @default({{ field.default_value }}){% endif %}{% if field.relation %}{% if field.relation.type == "one_to_many" %} @relation("{{ field.relation.name }}"){% endif %}{% endif %}
+  {% endfor %}
+  
+  {% if table.relationships %}
+  // Relationships
+  {% for relation in table.relationships %}
+  {% if relation.type == "one_to_many" %}
+  {{ relation.field_name | snake_case }} {{ relation.related_table | pascal_case }}[] @relation("{{ relation.name }}")
+  {% elif relation.type == "many_to_one" %}
+  {{ relation.field_name | snake_case }} {{ relation.related_table | pascal_case }} @relation(fields: [{{ relation.foreign_key }}], references: [{{ relation.referenced_key }}])
+  {% elif relation.type == "many_to_many" %}
+  {{ relation.field_name | snake_case }} {{ relation.related_table | pascal_case }}[] @relation("{{ relation.name }}")
+  {% endif %}
+  {% endfor %}
+  {% endif %}
+  
+  @@map("{{ table.name | snake_case }}")
+}
+
+{% endfor %} 

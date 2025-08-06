@@ -98,30 +98,31 @@ class JSONToORM:
             # Парсинг JSON-схемы
             if verbose:
                 logger.info("Парсинг JSON-схемы")
-            schema = self.parser.parse(input_file)
+            schema = self.parser.parse_file(input_file)
 
             # Валидация схемы
             if verbose:
                 logger.info("Валидация схемы")
-            validation_result = self.validator.validate(schema)
+            is_valid, errors, warnings = self.validator.validate_schema(schema)
 
-            if not validation_result.is_valid:
-                errors = [
-                    f"Ошибка валидации: {error}" for error in validation_result.errors
+            if not is_valid:
+                error_messages = [
+                    f"Ошибка валидации: {error}" for error in errors
                 ]
                 return GenerationResult(
                     success=False,
                     files_created=0,
                     execution_time=time.time() - start_time,
                     output_dir=output_dir,
-                    errors=errors,
+                    errors=error_messages,
                 )
 
             # Генерация моделей
             if verbose:
                 logger.info(f"Генерация моделей в формате {format}")
             generator = self.generators[format]
-            files_created = generator.generate(schema, output_dir)
+            generated_files = generator.generate_models(schema, output_dir)
+            files_created = len(generated_files)
 
             execution_time = time.time() - start_time
 
@@ -158,12 +159,19 @@ class JSONToORM:
         """
         try:
             # Парсинг JSON-схемы
-            schema = self.parser.parse(input_file)
+            schema = self.parser.parse_file(input_file)
 
             # Валидация схемы
-            validation_result = self.validator.validate(schema)
-
-            return validation_result
+            is_valid, errors, warnings = self.validator.validate_schema(schema)
+            
+            # Создаем ValidationResult
+            from .parser.validator import ValidationResult
+            return ValidationResult(
+                is_valid=is_valid,
+                table_count=len(schema.get("tables", [])),
+                relationship_count=len(schema.get("relationships", [])),
+                errors=errors
+            )
 
         except Exception as e:
             logger.error(f"Ошибка при валидации: {e}")

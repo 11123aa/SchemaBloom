@@ -9,7 +9,10 @@ from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
+from jinja2 import Environment, FileSystemLoader
+
 from ..utils.logger import get_logger
+from ..utils.template_filters import FILTERS
 
 logger = get_logger(__name__)
 
@@ -25,7 +28,21 @@ class BaseGenerator(ABC):
     def __init__(self) -> None:
         """Инициализация генератора."""
         self.logger = logger
-        self.template_engine = None  # Будет инициализирован в подклассах
+        self._setup_template_engine()
+
+    def _setup_template_engine(self) -> None:
+        """Настройка движка шаблонов Jinja2."""
+        template_dir = Path(__file__).parent.parent / "templates"
+        self.template_engine = Environment(
+            loader=FileSystemLoader(str(template_dir)),
+            trim_blocks=True,
+            lstrip_blocks=True,
+            keep_trailing_newline=True
+        )
+        
+        # Регистрируем фильтры
+        for name, filter_func in FILTERS.items():
+            self.template_engine.filters[name] = filter_func
 
     @abstractmethod
     def generate_models(

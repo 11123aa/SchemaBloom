@@ -9,7 +9,12 @@ CLI-утилита для генерации ORM моделей из JSON-схе
 pip install json-to-orm
 
 # Использование
-json-to-orm generate --input schema.json --output models/ --format prisma
+json-to-orm generate schema.json models/ --format prisma
+
+# Примеры
+json-to-orm generate examples/sample_schema.json output/ --format prisma
+json-to-orm validate examples/sample_schema.json
+json-to-orm list-formats
 ```
 
 ## 🔗 Ссылки
@@ -19,8 +24,8 @@ json-to-orm generate --input schema.json --output models/ --format prisma
 ## 📋 Статус проекта
 
 - **Статус**: В разработке
-- **Прогресс**: 20% (10/50 задач выполнено)
-- **Текущий этап**: Планирование и документация
+- **Прогресс**: 50% (25/50 задач выполнено)
+- **Текущий этап**: Реализация генераторов моделей
 
 ## 🛠 Технологии
 

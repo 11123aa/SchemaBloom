@@ -5,11 +5,22 @@
 используемых для генерации ORM моделей.
 """
 
+from dataclasses import dataclass
 from typing import Any, Dict, List, Optional, Tuple
 
 from ..utils.logger import get_logger
 
 logger = get_logger(__name__)
+
+
+@dataclass
+class ValidationResult:
+    """Результат валидации схемы."""
+
+    is_valid: bool
+    table_count: int
+    relationship_count: int
+    errors: List[str]
 
 
 class SchemaValidator:
@@ -264,14 +275,14 @@ class SchemaValidator:
                 continue
 
             # Проверяем обязательные поля связи
-            required_fields = ["from", "to", "type"]
+            required_fields = ["table", "related_table", "type"]
             for field in required_fields:
                 if field not in relationship:
                     self.errors.append(f"Связь {i} не имеет поля '{field}'")
                     continue
 
-            from_table = relationship["from"]
-            to_table = relationship["to"]
+            from_table = relationship["table"]
+            to_table = relationship["related_table"]
             rel_type = relationship["type"]
 
             # Проверяем существование таблиц

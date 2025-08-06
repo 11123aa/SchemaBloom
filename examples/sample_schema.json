@@ -1,0 +1,172 @@
+{
+  "name": "Sample Database",
+  "description": "Пример схемы базы данных для тестирования",
+  "tables": [
+    {
+      "name": "users",
+      "description": "Таблица пользователей",
+      "fields": [
+        {
+          "name": "id",
+          "type": "integer",
+          "is_primary_key": true,
+          "is_nullable": false,
+          "description": "Уникальный идентификатор пользователя"
+        },
+        {
+          "name": "email",
+          "type": "string",
+          "is_unique": true,
+          "is_nullable": false,
+          "description": "Email пользователя"
+        },
+        {
+          "name": "username",
+          "type": "string",
+          "is_unique": true,
+          "is_nullable": false,
+          "description": "Имя пользователя"
+        },
+        {
+          "name": "password_hash",
+          "type": "string",
+          "is_nullable": false,
+          "description": "Хеш пароля"
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "is_nullable": false,
+          "default_value": "now()",
+          "description": "Дата создания"
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "is_nullable": false,
+          "default_value": "now()",
+          "description": "Дата обновления"
+        }
+      ]
+    },
+    {
+      "name": "posts",
+      "description": "Таблица постов",
+      "fields": [
+        {
+          "name": "id",
+          "type": "integer",
+          "is_primary_key": true,
+          "is_nullable": false,
+          "description": "Уникальный идентификатор поста"
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "is_nullable": false,
+          "description": "Заголовок поста"
+        },
+        {
+          "name": "content",
+          "type": "text",
+          "is_nullable": false,
+          "description": "Содержимое поста"
+        },
+        {
+          "name": "author_id",
+          "type": "integer",
+          "is_nullable": false,
+          "description": "ID автора поста"
+        },
+        {
+          "name": "published",
+          "type": "boolean",
+          "is_nullable": false,
+          "default_value": "false",
+          "description": "Статус публикации"
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "is_nullable": false,
+          "default_value": "now()",
+          "description": "Дата создания"
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "is_nullable": false,
+          "default_value": "now()",
+          "description": "Дата обновления"
+        }
+      ]
+    },
+    {
+      "name": "comments",
+      "description": "Таблица комментариев",
+      "fields": [
+        {
+          "name": "id",
+          "type": "integer",
+          "is_primary_key": true,
+          "is_nullable": false,
+          "description": "Уникальный идентификатор комментария"
+        },
+        {
+          "name": "content",
+          "type": "text",
+          "is_nullable": false,
+          "description": "Содержимое комментария"
+        },
+        {
+          "name": "post_id",
+          "type": "integer",
+          "is_nullable": false,
+          "description": "ID поста"
+        },
+        {
+          "name": "author_id",
+          "type": "integer",
+          "is_nullable": false,
+          "description": "ID автора комментария"
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "is_nullable": false,
+          "default_value": "now()",
+          "description": "Дата создания"
+        }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "name": "UserPosts",
+      "type": "one_to_many",
+      "table": "users",
+      "related_table": "posts",
+      "field_name": "posts",
+      "foreign_key": "author_id",
+      "referenced_key": "id"
+    },
+    {
+      "name": "PostComments",
+      "type": "one_to_many",
+      "table": "posts",
+      "related_table": "comments",
+      "field_name": "comments",
+      "foreign_key": "post_id",
+      "referenced_key": "id"
+    },
+    {
+      "name": "UserComments",
+      "type": "one_to_many",
+      "table": "users",
+      "related_table": "comments",
+      "field_name": "comments",
+      "foreign_key": "author_id",
+      "referenced_key": "id"
+    }
+  ]
+} 
