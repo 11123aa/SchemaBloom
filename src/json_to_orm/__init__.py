@@ -13,4 +13,4 @@ __email__ = "team@json-to-orm.com"
 from .cli import main
 from .core import JSONToORM
 
-__all__ = ["main", "JSONToORM"] 
+__all__ = ["main", "JSONToORM"]

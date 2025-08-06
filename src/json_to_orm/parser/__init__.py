@@ -8,4 +8,4 @@
 from .json_parser import JSONParser
 from .validator import SchemaValidator
 
-__all__ = ["JSONParser", "SchemaValidator"] 
+__all__ = ["JSONParser", "SchemaValidator"]

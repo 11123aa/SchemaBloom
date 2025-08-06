@@ -60,35 +60,39 @@ def generate(
 ) -> None:
     """
     Генерирует ORM модели из JSON-схемы данных.
-    
+
     Примеры:
         json-to-orm generate schema.json models/ --format prisma
         json-to-orm generate schema.json models/ -f django -v
     """
     try:
         if verbose:
-            console.print(f"[bold blue]Генерация моделей в формате {format.upper()}[/bold blue]")
+            console.print(
+                f"[bold blue]Генерация моделей в формате {format.upper()}[/bold blue]"
+            )
             console.print(f"Входной файл: {input_file}")
             console.print(f"Выходная директория: {output_dir}")
-        
+
         # Создание экземпляра конвертера
         converter = JSONToORM()
-        
+
         # Генерация моделей
         result = converter.generate(
             input_file=str(input_file),
             output_dir=str(output_dir),
             format=format.lower(),
-            verbose=verbose
+            verbose=verbose,
         )
-        
+
         if verbose:
             console.print(f"[bold green]✓ Модели успешно сгенерированы![/bold green]")
             console.print(f"Создано файлов: {result.files_created}")
             console.print(f"Время выполнения: {result.execution_time:.2f}с")
         else:
-            console.print(f"[bold green]✓ Модели успешно сгенерированы в {output_dir}[/bold green]")
-            
+            console.print(
+                f"[bold green]✓ Модели успешно сгенерированы в {output_dir}[/bold green]"
+            )
+
     except Exception as e:
         logger.error(f"Ошибка при генерации моделей: {e}")
         console.print(f"[bold red]✗ Ошибка: {e}[/bold red]")
@@ -113,7 +117,7 @@ def validate(
 ) -> None:
     """
     Валидирует JSON-схему данных.
-    
+
     Примеры:
         json-to-orm validate schema.json
         json-to-orm validate schema.json -v
@@ -122,18 +126,20 @@ def validate(
         if verbose:
             console.print(f"[bold blue]Валидация схемы данных[/bold blue]")
             console.print(f"Файл: {input_file}")
-        
+
         # Создание экземпляра конвертера
         converter = JSONToORM()
-        
+
         # Валидация схемы
         validation_result = converter.validate(str(input_file))
-        
+
         if validation_result.is_valid:
             if verbose:
                 console.print(f"[bold green]✓ Схема валидна![/bold green]")
                 console.print(f"Количество таблиц: {validation_result.table_count}")
-                console.print(f"Количество связей: {validation_result.relationship_count}")
+                console.print(
+                    f"Количество связей: {validation_result.relationship_count}"
+                )
             else:
                 console.print(f"[bold green]✓ Схема валидна[/bold green]")
         else:
@@ -141,7 +147,7 @@ def validate(
             for error in validation_result.errors:
                 console.print(f"  - {error}")
             sys.exit(1)
-            
+
     except Exception as e:
         logger.error(f"Ошибка при валидации схемы: {e}")
         console.print(f"[bold red]✗ Ошибка: {e}[/bold red]")
@@ -152,29 +158,29 @@ def validate(
 def list_formats() -> None:
     """
     Показывает список поддерживаемых форматов генерации.
-    
+
     Примеры:
         json-to-orm list-formats
     """
     try:
         console.print("[bold blue]Поддерживаемые форматы генерации:[/bold blue]")
-        
+
         table = Table(show_header=True, header_style="bold magenta")
         table.add_column("Формат", style="cyan")
         table.add_column("Описание", style="white")
         table.add_column("Расширение файла", style="green")
-        
+
         formats = [
             ("prisma", "Prisma Schema", ".prisma"),
             ("django", "Django Models", ".py"),
             ("sqlalchemy", "SQLAlchemy Models", ".py"),
         ]
-        
+
         for format_name, description, extension in formats:
             table.add_row(format_name, description, extension)
-        
+
         console.print(table)
-        
+
     except Exception as e:
         logger.error(f"Ошибка при получении списка форматов: {e}")
         console.print(f"[bold red]✗ Ошибка: {e}[/bold red]")
@@ -185,11 +191,12 @@ def list_formats() -> None:
 def version() -> None:
     """
     Показывает версию утилиты.
-    
+
     Примеры:
         json-to-orm version
     """
     from . import __version__
+
     console.print(f"[bold blue]JSON-to-ORM версия {__version__}[/bold blue]")
 
 
@@ -209,4 +216,4 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main() 
+    main()

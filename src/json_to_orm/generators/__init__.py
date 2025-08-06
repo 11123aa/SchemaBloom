@@ -10,9 +10,4 @@ from .prisma import PrismaGenerator
 from .django import DjangoGenerator
 from .sqlalchemy import SQLAlchemyGenerator
 
-__all__ = [
-    "BaseGenerator",
-    "PrismaGenerator", 
-    "DjangoGenerator",
-    "SQLAlchemyGenerator"
-] 
+__all__ = ["BaseGenerator", "PrismaGenerator", "DjangoGenerator", "SQLAlchemyGenerator"]
