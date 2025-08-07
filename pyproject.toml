@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "json-to-orm"
-version = "1.0.0"
+version = "1.0.1"
 description = "A powerful CLI utility for generating ORM models from JSON schemas. Supports Prisma, Django, and SQLAlchemy with automatic relationship generation."
 readme = "README.md"
 license = {text = "MIT"}
