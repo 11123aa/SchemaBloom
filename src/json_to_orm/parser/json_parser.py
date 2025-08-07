@@ -7,7 +7,7 @@ JSON парсер для схем данных.
 
 import json
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Union
 
 from ..utils.logger import get_logger
 
@@ -26,7 +26,7 @@ class JSONParser:
         """Инициализация парсера."""
         self.logger = logger
 
-    def parse_file(self, file_path: str | Path) -> Dict[str, Any]:
+    def parse_file(self, file_path: Union[str, Path]) -> Dict[str, Any]:
         """
         Парсит JSON-файл и возвращает его содержимое.
 
