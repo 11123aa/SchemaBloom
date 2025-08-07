@@ -69,6 +69,19 @@ json-to-orm list-formats
 ## 🔗 Ссылки
 
 - **Репозиторий**: https://github.com/11123aa/SchemaBloom.git
+- **PyPI**: https://pypi.org/project/json-to-orm/
+
+## 📦 Установка
+
+```bash
+# Установка из PyPI
+pip install json-to-orm
+
+# Установка из исходного кода
+git clone https://github.com/11123aa/SchemaBloom.git
+cd SchemaBloom
+pip install -e .
+```
 
 ## 🛠 Технологии
 

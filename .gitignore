@@ -175,3 +175,6 @@ docs/
 
 # Test output files (may contain sensitive patterns)
 test_output/
+
+# PyPI configuration (contains API tokens)
+.pypirc
