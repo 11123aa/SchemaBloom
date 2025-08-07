@@ -191,15 +191,23 @@ class BaseGenerator(ABC):
 
     def get_field_type(self, field: Dict[str, Any]) -> str:
         """
-        Извлекает тип поля.
+        Извлекает тип поля и конвертирует его в поддерживаемый тип ORM.
 
         Args:
             field: Данные поля
 
         Returns:
-            Тип поля
+            Тип поля для ORM
         """
-        return field.get("type", "string")
+        field_type = field.get("type", "string")
+        supported_types = self.get_supported_types()
+        
+        if field_type in supported_types:
+            return supported_types[field_type]
+        else:
+            # Если тип не поддерживается, логируем предупреждение и возвращаем String
+            self.logger.warning(f"Тип '{field_type}' не поддерживается в {self.__class__.__name__}")
+            return supported_types.get("string", "String")
 
     def is_primary_key(self, field: Dict[str, Any]) -> bool:
         """

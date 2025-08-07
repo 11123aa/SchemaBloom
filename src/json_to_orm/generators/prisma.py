@@ -155,6 +155,7 @@ class PrismaGenerator(BaseGenerator):
             Словарь {тип_схемы: тип_prisma}
         """
         return {
+            # Базовые типы
             "string": "String",
             "integer": "Int",
             "float": "Float",
@@ -163,8 +164,30 @@ class PrismaGenerator(BaseGenerator):
             "date": "DateTime",
             "time": "DateTime",
             "text": "String",
+            
+            # Расширенные типы
+            "uuid": "String",  # Prisma не имеет встроенного UUID типа
             "json": "Json",
+            "jsonb": "Json",
+            "array": "String",  # Prisma не поддерживает массивы напрямую
+            "enum": "String",   # Нужно создавать enum отдельно
+            "decimal": "Decimal",
             "binary": "Bytes",
+            "blob": "Bytes",
+            
+            # Географические типы (требуют расширения)
+            "point": "String",
+            "line": "String",
+            "polygon": "String",
+            "geometry": "String",
+            
+            # Специальные типы
+            "email": "String",
+            "url": "String",
+            "ip": "String",
+            "mac": "String",
+            "phone": "String",
+            "currency": "String",
         }
 
     def get_file_extension(self) -> str:

@@ -340,21 +340,21 @@ class TestPrismaGenerator:
         """Тест маппинга типов полей для Prisma."""
         generator = PrismaGenerator()
         
-        # Проверяем основные типы (базовый генератор возвращает исходные типы)
+        # Проверяем основные типы (теперь возвращает ORM типы)
         field = {"type": "integer"}
-        assert generator.get_field_type(field) == "integer"
+        assert generator.get_field_type(field) == "Int"
         
         field = {"type": "string"}
-        assert generator.get_field_type(field) == "string"
+        assert generator.get_field_type(field) == "String"
         
         field = {"type": "boolean"}
-        assert generator.get_field_type(field) == "boolean"
+        assert generator.get_field_type(field) == "Boolean"
         
         field = {"type": "datetime"}
-        assert generator.get_field_type(field) == "datetime"
+        assert generator.get_field_type(field) == "DateTime"
         
         field = {"type": "text"}
-        assert generator.get_field_type(field) == "text"
+        assert generator.get_field_type(field) == "String"
 
     def test_prisma_primary_key_handling(self):
         """Тест обработки первичных ключей в Prisma."""
@@ -625,19 +625,19 @@ class TestSQLAlchemyGenerator:
         
         # Проверяем основные типы (базовый генератор возвращает исходные типы)
         field = {"type": "integer"}
-        assert generator.get_field_type(field) == "integer"
+        assert generator.get_field_type(field) == "Integer"
         
         field = {"type": "string"}
-        assert generator.get_field_type(field) == "string"
+        assert generator.get_field_type(field) == "String"
         
         field = {"type": "boolean"}
-        assert generator.get_field_type(field) == "boolean"
+        assert generator.get_field_type(field) == "Boolean"
         
         field = {"type": "datetime"}
-        assert generator.get_field_type(field) == "datetime"
+        assert generator.get_field_type(field) == "DateTime"
         
         field = {"type": "text"}
-        assert generator.get_field_type(field) == "text"
+        assert generator.get_field_type(field) == "Text"
 
     def test_sqlalchemy_primary_key_handling(self):
         """Тест обработки первичных ключей в SQLAlchemy."""

@@ -111,6 +111,7 @@ class DjangoGenerator(BaseGenerator):
             Словарь {тип_схемы: тип_django}
         """
         return {
+            # Базовые типы
             "string": "CharField",
             "integer": "IntegerField",
             "float": "FloatField",
@@ -119,14 +120,30 @@ class DjangoGenerator(BaseGenerator):
             "date": "DateField",
             "time": "TimeField",
             "text": "TextField",
+            
+            # Расширенные типы
+            "uuid": "UUIDField",
             "json": "JSONField",
+            "jsonb": "JSONField",
+            "array": "TextField",  # Django не поддерживает массивы напрямую
+            "enum": "CharField",   # Нужно создавать choices
+            "decimal": "DecimalField",
             "binary": "BinaryField",
+            "blob": "BinaryField",
+            
+            # Географические типы (требуют django.contrib.gis)
+            "point": "PointField",
+            "line": "LineStringField",
+            "polygon": "PolygonField",
+            "geometry": "GeometryField",
+            
+            # Специальные типы
             "email": "EmailField",
             "url": "URLField",
-            "uuid": "UUIDField",
-            "decimal": "DecimalField",
-            "file": "FileField",
-            "image": "ImageField",
+            "ip": "GenericIPAddressField",
+            "mac": "CharField",  # Django не имеет встроенного MAC поля
+            "phone": "CharField",  # Django не имеет встроенного phone поля
+            "currency": "CharField",  # Django не имеет встроенного currency поля
         }
 
     def get_file_extension(self) -> str:

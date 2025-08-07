@@ -155,6 +155,7 @@ class SQLAlchemyGenerator(BaseGenerator):
             Словарь {тип_схемы: тип_sqlalchemy}
         """
         return {
+            # Базовые типы
             "string": "String",
             "integer": "Integer",
             "float": "Float",
@@ -163,8 +164,30 @@ class SQLAlchemyGenerator(BaseGenerator):
             "date": "Date",
             "time": "Time",
             "text": "Text",
+            
+            # Расширенные типы
+            "uuid": "String",  # SQLAlchemy не имеет встроенного UUID типа
             "json": "JSON",
+            "jsonb": "JSON",
+            "array": "String",  # SQLAlchemy не поддерживает массивы напрямую
+            "enum": "String",   # Нужно создавать Enum отдельно
+            "decimal": "Numeric",
             "binary": "LargeBinary",
+            "blob": "LargeBinary",
+            
+            # Географические типы (требуют расширения)
+            "point": "String",
+            "line": "String",
+            "polygon": "String",
+            "geometry": "String",
+            
+            # Специальные типы
+            "email": "String",
+            "url": "String",
+            "ip": "String",
+            "mac": "String",
+            "phone": "String",
+            "currency": "String",
         }
 
     def get_file_extension(self) -> str:

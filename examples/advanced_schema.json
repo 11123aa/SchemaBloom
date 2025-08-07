@@ -1,0 +1,643 @@
+{
+  "name": "Advanced E-commerce Platform",
+  "description": "Полнофункциональная схема для современного интернет-магазина с поддержкой всех новых типов данных",
+  "metadata": {
+    "version": "2.0.0",
+    "author": "SchemaBloom Team",
+    "tags": ["ecommerce", "advanced", "modern", "multi-tenant"],
+    "created": "2024-12-20",
+    "last_updated": "2024-12-20"
+  },
+  "tables": [
+    {
+      "name": "tenants",
+      "description": "Мультитенантность - организации/магазины",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "is_primary_key": true,
+          "default_value": "gen_random_uuid()",
+          "description": "Уникальный идентификатор арендатора"
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "max_length": 100,
+          "is_nullable": false,
+          "description": "Название организации"
+        },
+        {
+          "name": "domain",
+          "type": "url",
+          "is_unique": true,
+          "max_length": 255,
+          "description": "Домен организации"
+        },
+        {
+          "name": "settings",
+          "type": "json",
+          "is_nullable": true,
+          "description": "Настройки организации в JSON формате"
+        },
+        {
+          "name": "status",
+          "type": "enum",
+          "enum_values": ["active", "suspended", "pending", "deleted"],
+          "default_value": "pending",
+          "description": "Статус организации"
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "default_value": "now()",
+          "description": "Дата создания"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_tenants_domain",
+          "fields": ["domain"],
+          "type": "btree"
+        },
+        {
+          "name": "idx_tenants_status",
+          "fields": ["status"],
+          "type": "btree"
+        }
+      ]
+    },
+    {
+      "name": "users",
+      "description": "Пользователи системы",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "is_primary_key": true,
+          "default_value": "gen_random_uuid()"
+        },
+        {
+          "name": "tenant_id",
+          "type": "uuid",
+          "is_nullable": false
+        },
+        {
+          "name": "email",
+          "type": "email",
+          "is_unique": true,
+          "max_length": 255
+        },
+        {
+          "name": "phone",
+          "type": "phone",
+          "is_nullable": true,
+          "max_length": 20
+        },
+        {
+          "name": "password_hash",
+          "type": "string",
+          "max_length": 255
+        },
+        {
+          "name": "first_name",
+          "type": "string",
+          "max_length": 50
+        },
+        {
+          "name": "last_name",
+          "type": "string",
+          "max_length": 50
+        },
+        {
+          "name": "avatar_url",
+          "type": "url",
+          "is_nullable": true
+        },
+        {
+          "name": "ip_address",
+          "type": "ip",
+          "is_nullable": true
+        },
+        {
+          "name": "mac_address",
+          "type": "mac",
+          "is_nullable": true
+        },
+        {
+          "name": "preferences",
+          "type": "json",
+          "is_nullable": true,
+          "description": "Пользовательские настройки"
+        },
+        {
+          "name": "roles",
+          "type": "array",
+          "is_nullable": true,
+          "description": "Роли пользователя"
+        },
+        {
+          "name": "status",
+          "type": "enum",
+          "enum_values": ["active", "inactive", "banned", "pending"],
+          "default_value": "pending"
+        },
+        {
+          "name": "last_login",
+          "type": "datetime",
+          "is_nullable": true
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "default_value": "now()"
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "default_value": "now()"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_users_email",
+          "fields": ["email"],
+          "type": "btree"
+        },
+        {
+          "name": "idx_users_tenant",
+          "fields": ["tenant_id"],
+          "type": "btree"
+        },
+        {
+          "name": "idx_users_status",
+          "fields": ["status"],
+          "type": "btree"
+        }
+      ]
+    },
+    {
+      "name": "categories",
+      "description": "Категории товаров с иерархией",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "is_primary_key": true,
+          "default_value": "gen_random_uuid()"
+        },
+        {
+          "name": "tenant_id",
+          "type": "uuid",
+          "is_nullable": false
+        },
+        {
+          "name": "parent_id",
+          "type": "uuid",
+          "is_nullable": true,
+          "description": "ID родительской категории для иерархии"
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "max_length": 100,
+          "is_nullable": false
+        },
+        {
+          "name": "slug",
+          "type": "string",
+          "is_unique": true,
+          "max_length": 100
+        },
+        {
+          "name": "description",
+          "type": "text",
+          "is_nullable": true
+        },
+        {
+          "name": "image_url",
+          "type": "url",
+          "is_nullable": true
+        },
+        {
+          "name": "meta_data",
+          "type": "json",
+          "is_nullable": true,
+          "description": "SEO метаданные"
+        },
+        {
+          "name": "sort_order",
+          "type": "integer",
+          "default_value": 0
+        },
+        {
+          "name": "is_active",
+          "type": "boolean",
+          "default_value": true
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "default_value": "now()"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_categories_tenant",
+          "fields": ["tenant_id"],
+          "type": "btree"
+        },
+        {
+          "name": "idx_categories_parent",
+          "fields": ["parent_id"],
+          "type": "btree"
+        },
+        {
+          "name": "idx_categories_slug",
+          "fields": ["slug"],
+          "type": "btree"
+        }
+      ]
+    },
+    {
+      "name": "products",
+      "description": "Товары с расширенными характеристиками",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "is_primary_key": true,
+          "default_value": "gen_random_uuid()"
+        },
+        {
+          "name": "tenant_id",
+          "type": "uuid",
+          "is_nullable": false
+        },
+        {
+          "name": "category_id",
+          "type": "uuid",
+          "is_nullable": false
+        },
+        {
+          "name": "sku",
+          "type": "string",
+          "is_unique": true,
+          "max_length": 50,
+          "description": "Артикул товара"
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "max_length": 200,
+          "is_nullable": false
+        },
+        {
+          "name": "slug",
+          "type": "string",
+          "is_unique": true,
+          "max_length": 200
+        },
+        {
+          "name": "description",
+          "type": "text",
+          "is_nullable": true
+        },
+        {
+          "name": "short_description",
+          "type": "string",
+          "max_length": 500,
+          "is_nullable": true
+        },
+        {
+          "name": "price",
+          "type": "decimal",
+          "precision": 10,
+          "scale": 2,
+          "is_nullable": false
+        },
+        {
+          "name": "compare_price",
+          "type": "decimal",
+          "precision": 10,
+          "scale": 2,
+          "is_nullable": true,
+          "description": "Цена для сравнения"
+        },
+        {
+          "name": "cost_price",
+          "type": "decimal",
+          "precision": 10,
+          "scale": 2,
+          "is_nullable": true,
+          "description": "Себестоимость"
+        },
+        {
+          "name": "stock_quantity",
+          "type": "integer",
+          "default_value": 0
+        },
+        {
+          "name": "weight",
+          "type": "decimal",
+          "precision": 8,
+          "scale": 3,
+          "is_nullable": true,
+          "description": "Вес в кг"
+        },
+        {
+          "name": "dimensions",
+          "type": "json",
+          "is_nullable": true,
+          "description": "Габариты {length, width, height}"
+        },
+        {
+          "name": "attributes",
+          "type": "json",
+          "is_nullable": true,
+          "description": "Характеристики товара"
+        },
+        {
+          "name": "tags",
+          "type": "array",
+          "is_nullable": true,
+          "description": "Теги товара"
+        },
+        {
+          "name": "images",
+          "type": "array",
+          "is_nullable": true,
+          "description": "URL изображений"
+        },
+        {
+          "name": "status",
+          "type": "enum",
+          "enum_values": ["draft", "active", "inactive", "out_of_stock", "discontinued"],
+          "default_value": "draft"
+        },
+        {
+          "name": "featured",
+          "type": "boolean",
+          "default_value": false
+        },
+        {
+          "name": "rating",
+          "type": "decimal",
+          "precision": 3,
+          "scale": 2,
+          "is_nullable": true,
+          "default_value": 0
+        },
+        {
+          "name": "reviews_count",
+          "type": "integer",
+          "default_value": 0
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "default_value": "now()"
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "default_value": "now()"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_products_tenant",
+          "fields": ["tenant_id"],
+          "type": "btree"
+        },
+        {
+          "name": "idx_products_category",
+          "fields": ["category_id"],
+          "type": "btree"
+        },
+        {
+          "name": "idx_products_sku",
+          "fields": ["sku"],
+          "type": "btree"
+        },
+        {
+          "name": "idx_products_status",
+          "fields": ["status"],
+          "type": "btree"
+        },
+        {
+          "name": "idx_products_price",
+          "fields": ["price"],
+          "type": "btree"
+        }
+      ]
+    },
+    {
+      "name": "orders",
+      "description": "Заказы с полной информацией",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "is_primary_key": true,
+          "default_value": "gen_random_uuid()"
+        },
+        {
+          "name": "tenant_id",
+          "type": "uuid",
+          "is_nullable": false
+        },
+        {
+          "name": "user_id",
+          "type": "uuid",
+          "is_nullable": true,
+          "description": "ID пользователя (может быть гость)"
+        },
+        {
+          "name": "order_number",
+          "type": "string",
+          "is_unique": true,
+          "max_length": 50
+        },
+        {
+          "name": "status",
+          "type": "enum",
+          "enum_values": ["pending", "confirmed", "processing", "shipped", "delivered", "cancelled", "refunded"],
+          "default_value": "pending"
+        },
+        {
+          "name": "subtotal",
+          "type": "decimal",
+          "precision": 10,
+          "scale": 2,
+          "is_nullable": false
+        },
+        {
+          "name": "tax_amount",
+          "type": "decimal",
+          "precision": 10,
+          "scale": 2,
+          "default_value": 0
+        },
+        {
+          "name": "shipping_amount",
+          "type": "decimal",
+          "precision": 10,
+          "scale": 2,
+          "default_value": 0
+        },
+        {
+          "name": "discount_amount",
+          "type": "decimal",
+          "precision": 10,
+          "scale": 2,
+          "default_value": 0
+        },
+        {
+          "name": "total_amount",
+          "type": "decimal",
+          "precision": 10,
+          "scale": 2,
+          "is_nullable": false
+        },
+        {
+          "name": "currency",
+          "type": "currency",
+          "max_length": 3,
+          "default_value": "USD"
+        },
+        {
+          "name": "billing_address",
+          "type": "json",
+          "is_nullable": true
+        },
+        {
+          "name": "shipping_address",
+          "type": "json",
+          "is_nullable": true
+        },
+        {
+          "name": "payment_method",
+          "type": "string",
+          "max_length": 50,
+          "is_nullable": true
+        },
+        {
+          "name": "payment_status",
+          "type": "enum",
+          "enum_values": ["pending", "paid", "failed", "refunded"],
+          "default_value": "pending"
+        },
+        {
+          "name": "notes",
+          "type": "text",
+          "is_nullable": true
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "default_value": "now()"
+        },
+        {
+          "name": "updated_at",
+          "type": "datetime",
+          "default_value": "now()"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_orders_tenant",
+          "fields": ["tenant_id"],
+          "type": "btree"
+        },
+        {
+          "name": "idx_orders_user",
+          "fields": ["user_id"],
+          "type": "btree"
+        },
+        {
+          "name": "idx_orders_status",
+          "fields": ["status"],
+          "type": "btree"
+        },
+        {
+          "name": "idx_orders_created",
+          "fields": ["created_at"],
+          "type": "btree"
+        }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "name": "TenantUsers",
+      "type": "one_to_many",
+      "from": "tenants",
+      "to": "users",
+      "foreign_key": "tenant_id",
+      "referenced_key": "id",
+      "on_delete": "cascade",
+      "on_update": "cascade"
+    },
+    {
+      "name": "TenantCategories",
+      "type": "one_to_many",
+      "from": "tenants",
+      "to": "categories",
+      "foreign_key": "tenant_id",
+      "referenced_key": "id",
+      "on_delete": "cascade",
+      "on_update": "cascade"
+    },
+    {
+      "name": "TenantProducts",
+      "type": "one_to_many",
+      "from": "tenants",
+      "to": "products",
+      "foreign_key": "tenant_id",
+      "referenced_key": "id",
+      "on_delete": "cascade",
+      "on_update": "cascade"
+    },
+    {
+      "name": "TenantOrders",
+      "type": "one_to_many",
+      "from": "tenants",
+      "to": "orders",
+      "foreign_key": "tenant_id",
+      "referenced_key": "id",
+      "on_delete": "cascade",
+      "on_update": "cascade"
+    },
+    {
+      "name": "CategoryHierarchy",
+      "type": "many_to_one",
+      "from": "categories",
+      "to": "categories",
+      "foreign_key": "parent_id",
+      "referenced_key": "id",
+      "on_delete": "set_null",
+      "on_update": "cascade"
+    },
+    {
+      "name": "ProductCategory",
+      "type": "many_to_one",
+      "from": "products",
+      "to": "categories",
+      "foreign_key": "category_id",
+      "referenced_key": "id",
+      "on_delete": "restrict",
+      "on_update": "cascade"
+    },
+    {
+      "name": "UserOrders",
+      "type": "one_to_many",
+      "from": "users",
+      "to": "orders",
+      "foreign_key": "user_id",
+      "referenced_key": "id",
+      "on_delete": "set_null",
+      "on_update": "cascade"
+    }
+  ]
+}

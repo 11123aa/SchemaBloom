@@ -103,11 +103,11 @@ class JSONToORM:
             # Валидация схемы
             if verbose:
                 logger.info("Валидация схемы")
-            is_valid, errors, warnings = self.validator.validate_schema(schema)
+            validation_result = self.validator.validate_schema(schema)
 
-            if not is_valid:
+            if not validation_result.is_valid:
                 error_messages = [
-                    f"Ошибка валидации: {error}" for error in errors
+                    f"Ошибка валидации: {error}" for error in validation_result.errors
                 ]
                 return GenerationResult(
                     success=False,
@@ -162,16 +162,8 @@ class JSONToORM:
             schema = self.parser.parse_file(input_file)
 
             # Валидация схемы
-            is_valid, errors, warnings = self.validator.validate_schema(schema)
-            
-            # Создаем ValidationResult
-            from .parser.validator import ValidationResult
-            return ValidationResult(
-                is_valid=is_valid,
-                table_count=len(schema.get("tables", [])),
-                relationship_count=len(schema.get("relationships", [])),
-                errors=errors
-            )
+            validation_result = self.validator.validate_schema(schema)
+            return validation_result
 
         except Exception as e:
             logger.error(f"Ошибка при валидации: {e}")

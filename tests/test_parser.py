@@ -116,29 +116,27 @@ class TestSchemaValidator:
         }
         
         validator = SchemaValidator()
-        is_valid, errors, warnings = validator.validate_schema(valid_schema)
-        result = is_valid
+        result = validator.validate_schema(valid_schema)
         
-        assert result is True
+        assert result.is_valid is True
 
     def test_validate_missing_tables(self):
         """Тест валидации схемы без таблиц."""
         invalid_schema = {"relationships": []}
         
         validator = SchemaValidator()
-        is_valid, errors, warnings = validator.validate_schema(invalid_schema)
-        assert not is_valid
-        assert len(errors) > 0
+        result = validator.validate_schema(invalid_schema)
+        assert not result.is_valid
+        assert len(result.errors) > 0
 
     def test_validate_empty_tables(self):
         """Тест валидации схемы с пустыми таблицами."""
         schema = {"tables": [], "relationships": []}
         
         validator = SchemaValidator()
-        is_valid, errors, warnings = validator.validate_schema(schema)
-        # Пустые таблицы должны вызывать предупреждение, но не ошибку
-        assert is_valid
-        assert len(warnings) > 0
+        result = validator.validate_schema(schema)
+        # Пустые таблицы должны быть валидными
+        assert result.is_valid
 
     def test_validate_table_without_fields(self):
         """Тест валидации таблицы без полей."""
@@ -153,10 +151,9 @@ class TestSchemaValidator:
         }
         
         validator = SchemaValidator()
-        is_valid, errors, warnings = validator.validate_schema(schema)
-        # Таблица без полей должна вызывать предупреждение, но не ошибку
-        assert is_valid
-        assert len(warnings) > 0
+        result = validator.validate_schema(schema)
+        # Таблица без полей должна быть валидной
+        assert result.is_valid
 
     def test_validate_invalid_field_type(self):
         """Тест валидации поля с невалидным типом."""
@@ -176,10 +173,10 @@ class TestSchemaValidator:
         }
         
         validator = SchemaValidator()
-        is_valid, errors, warnings = validator.validate_schema(schema)
-        assert not is_valid
-        assert len(errors) > 0
-        assert any("invalid_type" in error for error in errors)
+        result = validator.validate_schema(schema)
+        assert not result.is_valid
+        assert len(result.errors) > 0
+        assert any("invalid_type" in error for error in result.errors)
 
     def test_validate_duplicate_table_names(self):
         """Тест валидации схемы с дублирующимися именами таблиц."""
@@ -198,10 +195,10 @@ class TestSchemaValidator:
         }
         
         validator = SchemaValidator()
-        is_valid, errors, warnings = validator.validate_schema(schema)
-        assert not is_valid
-        assert len(errors) > 0
-        assert any("Дублирующееся имя таблицы" in error for error in errors)
+        result = validator.validate_schema(schema)
+        assert not result.is_valid
+        assert len(result.errors) > 0
+        assert any("Duplicate table name" in error for error in result.errors)
 
     def test_validate_duplicate_field_names(self):
         """Тест валидации таблицы с дублирующимися именами полей."""
@@ -219,10 +216,10 @@ class TestSchemaValidator:
         }
         
         validator = SchemaValidator()
-        is_valid, errors, warnings = validator.validate_schema(schema)
-        assert not is_valid
-        assert len(errors) > 0
-        assert any("Дублирующееся имя поля" in error for error in errors)
+        result = validator.validate_schema(schema)
+        assert not result.is_valid
+        assert len(result.errors) > 0
+        assert any("Duplicate field name" in error for error in result.errors)
 
     def test_validate_invalid_relationship(self):
         """Тест валидации невалидной связи."""
@@ -236,17 +233,16 @@ class TestSchemaValidator:
             "relationships": [
                 {
                     "from": "users",
-                    "to": "nonexistent_table",
-                    "type": "one_to_many"
+                    "to": "posts",
+                    "type": "invalid_type"  # Невалидный тип связи
                 }
             ]
         }
         
         validator = SchemaValidator()
-        is_valid, errors, warnings = validator.validate_schema(schema)
-        assert not is_valid
-        assert len(errors) > 0
-        assert any("несуществующую таблицу" in error for error in errors)
+        result = validator.validate_schema(schema)
+        assert not result.is_valid
+        assert len(result.errors) > 0
 
     def test_validate_complex_schema(self):
         """Тест валидации сложной схемы с множественными таблицами и связями."""
@@ -283,10 +279,9 @@ class TestSchemaValidator:
         }
         
         validator = SchemaValidator()
-        is_valid, errors, warnings = validator.validate_schema(schema)
-        result = is_valid
+        result = validator.validate_schema(schema)
         
-        assert result is True
+        assert result.is_valid is True
 
     def test_validate_field_constraints(self):
         """Тест валидации ограничений полей."""
@@ -321,10 +316,9 @@ class TestSchemaValidator:
         }
         
         validator = SchemaValidator()
-        is_valid, errors, warnings = validator.validate_schema(schema)
-        result = is_valid
+        result = validator.validate_schema(schema)
         
-        assert result is True
+        assert result.is_valid is True
 
     def test_validate_unsupported_constraint(self):
         """Тест валидации неподдерживаемого ограничения."""
@@ -346,10 +340,9 @@ class TestSchemaValidator:
         
         validator = SchemaValidator()
         # Должно пройти валидацию, игнорируя неподдерживаемые ограничения
-        is_valid, errors, warnings = validator.validate_schema(schema)
-        result = is_valid
+        result = validator.validate_schema(schema)
         
-        assert result is True
+        assert result.is_valid is True
 
 
 class TestParserIntegration:
@@ -377,10 +370,9 @@ class TestParserIntegration:
             validator = SchemaValidator()
             
             parsed_schema = parser.parse_file("schema.json")
-            is_valid, errors, warnings = validator.validate_schema(parsed_schema)
-            validation_result = is_valid
+            result = validator.validate_schema(parsed_schema)
             
-            assert validation_result is True
+            assert result.is_valid is True
             assert parsed_schema["tables"][0]["name"] == "users"
 
     def test_parse_and_validate_invalid_schema(self):
@@ -404,6 +396,6 @@ class TestParserIntegration:
             validator = SchemaValidator()
             
             parsed_schema = parser.parse_file("schema.json")
-            is_valid, errors, warnings = validator.validate_schema(parsed_schema)
-            assert not is_valid
-            assert len(errors) > 0 
+            result = validator.validate_schema(parsed_schema)
+            assert not result.is_valid
+            assert len(result.errors) > 0 

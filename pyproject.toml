@@ -34,12 +34,10 @@ classifiers = [
     "Topic :: Database",
     "Topic :: Utilities",
     "Topic :: Software Development :: Libraries :: Python Modules",
-    "Topic :: Software Development :: Tools",
     "Topic :: Text Processing :: Markup",
     "Operating System :: OS Independent",
     "Environment :: Console",
     "Framework :: Django",
-    "Framework :: SQLAlchemy",
 ]
 requires-python = ">=3.8"
 dependencies = [

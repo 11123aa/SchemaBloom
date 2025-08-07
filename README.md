@@ -18,6 +18,10 @@ A powerful CLI utility for generating ORM models from JSON schemas. Supports **P
 - **📝 Template System**: Flexible Jinja2-based template system for custom generation
 - **🧪 Comprehensive Testing**: 83 unit tests covering all functionality
 - **⚡ Fast & Efficient**: Optimized for performance and reliability
+- **🔄 Watch Mode**: Auto-regenerate models when schema changes
+- **📊 Extended Data Types**: Support for UUID, JSON, Arrays, Enums, and more
+- **🔍 Interactive Mode**: Step-by-step schema creation (coming soon)
+- **📤 Export/Import**: Convert between different schema formats (coming soon)
 
 ## 🚀 Quick Start
 
@@ -67,6 +71,8 @@ python -m json_to_orm validate schema.json
 - **🧪 Tests**: 83/83 passing with comprehensive coverage
 - **📚 Documentation**: Complete and professional
 - **🔧 Architecture**: Clean, modular, and well-organized
+- **📦 Package**: Built and ready for distribution
+- **⚠️ Note**: PyPI experiencing network issues, use local installation or GitHub releases
 
 ### Completed Components
 - ✅ JSON parser and validator
@@ -129,11 +135,17 @@ pip install json-to-orm
 # Generate models
 python -m json_to_orm generate schema.json output/ --format prisma
 
-# Validate schema
-python -m json_to_orm validate schema.json
+# Validate schema with detailed feedback
+python -m json_to_orm validate-schema schema.json --verbose
 
-# List supported formats
+# Watch for schema changes and auto-regenerate
+python -m json_to_orm watch schema.json output/ --format prisma
+
+# List all supported formats
 python -m json_to_orm list-formats
+
+# Interactive schema creation (coming soon)
+python -m json_to_orm interactive
 ```
 
 ### Advanced Usage
@@ -148,22 +160,42 @@ python -m json_to_orm version
 ### Example JSON Schema
 ```json
 {
+  "name": "Blog Database",
+  "description": "Simple blog database schema",
+  "metadata": {
+    "version": "1.0.0",
+    "author": "SchemaBloom",
+    "tags": ["blog", "content", "users"]
+  },
   "tables": [
     {
       "name": "users",
+      "description": "User accounts",
       "fields": [
-        {"name": "id", "type": "integer", "is_primary_key": true},
-        {"name": "email", "type": "string", "is_unique": true},
-        {"name": "name", "type": "string"}
+        {"name": "id", "type": "uuid", "is_primary_key": true, "default_value": "gen_random_uuid()"},
+        {"name": "email", "type": "email", "is_unique": true, "max_length": 255},
+        {"name": "username", "type": "string", "is_unique": true, "max_length": 50},
+        {"name": "password_hash", "type": "string", "max_length": 255},
+        {"name": "is_active", "type": "boolean", "default_value": true},
+        {"name": "created_at", "type": "datetime", "default_value": "now()"},
+        {"name": "profile_data", "type": "json", "is_nullable": true}
+      ],
+      "indexes": [
+        {"name": "idx_users_email", "fields": ["email"], "type": "btree"},
+        {"name": "idx_users_username", "fields": ["username"], "type": "btree"}
       ]
     },
     {
       "name": "posts",
+      "description": "Blog posts",
       "fields": [
-        {"name": "id", "type": "integer", "is_primary_key": true},
-        {"name": "title", "type": "string"},
+        {"name": "id", "type": "uuid", "is_primary_key": true, "default_value": "gen_random_uuid()"},
+        {"name": "title", "type": "string", "max_length": 200},
         {"name": "content", "type": "text"},
-        {"name": "author_id", "type": "integer"}
+        {"name": "status", "type": "enum", "enum_values": ["draft", "published", "archived"], "default_value": "draft"},
+        {"name": "author_id", "type": "uuid"},
+        {"name": "created_at", "type": "datetime", "default_value": "now()"},
+        {"name": "updated_at", "type": "datetime", "default_value": "now()"}
       ]
     }
   ],
@@ -171,11 +203,12 @@ python -m json_to_orm version
     {
       "name": "UserPosts",
       "type": "one_to_many",
-      "table": "users",
-      "related_table": "posts",
-      "field_name": "posts",
+      "from": "users",
+      "to": "posts",
       "foreign_key": "author_id",
-      "referenced_key": "id"
+      "referenced_key": "id",
+      "on_delete": "cascade",
+      "on_update": "cascade"
     }
   ]
 }
