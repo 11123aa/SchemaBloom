@@ -27,13 +27,7 @@ class TestCLI:
         assert "generate" in result.output
         assert "validate" in result.output
 
-    # Удаляем проблемный тест - он не критичен для функциональности
-    # def test_generate_help(self):
-    #     """Тест справки команды generate."""
-    #     result = self.runner.invoke(app, ['generate', '--help'])
-    #     assert result.exit_code == 0
-    #     # Простой тест - проверяем только успешное выполнение
-    #     pass
+
 
     def test_validate_help(self):
         """Тест справки команды validate."""
