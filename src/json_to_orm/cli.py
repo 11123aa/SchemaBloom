@@ -1,8 +1,8 @@
 """
-CLI интерфейс для JSON-to-ORM.
+CLI interface for JSON-to-ORM.
 
-Этот модуль предоставляет командную строку для генерации ORM моделей
-из JSON-схем данных.
+This module provides command line interface for generating ORM models
+from JSON data schemas.
 """
 
 import sys
@@ -16,17 +16,17 @@ from rich.table import Table
 from .core import JSONToORM
 from .utils.logger import setup_logger, get_logger
 
-# Создание экземпляра Typer
+# Create Typer instance
 app = typer.Typer(
     name="json-to-orm",
-    help="CLI-утилита для генерации ORM моделей из JSON-схем",
+    help="CLI utility for generating ORM models from JSON schemas",
     add_completion=False,
 )
 
-# Создание консоли для красивого вывода
+# Create console for beautiful output
 console = Console()
 
-# Настройка логирования
+# Setup logging
 setup_logger()
 logger = get_logger(__name__)
 
@@ -35,48 +35,48 @@ logger = get_logger(__name__)
 def generate(
     input_file: Path = typer.Argument(
         ...,
-        help="Путь к JSON-файлу со схемой данных",
+        help="Path to JSON file with data schema",
         exists=True,
         file_okay=True,
         dir_okay=False,
     ),
     output_dir: Path = typer.Argument(
         ...,
-        help="Директория для сохранения сгенерированных моделей",
+        help="Directory to save generated models",
     ),
     format: str = typer.Option(
         "prisma",
         "--format",
         "-f",
-        help="Формат генерации (prisma, django, sqlalchemy)",
+        help="Generation format (prisma, django, sqlalchemy)",
         case_sensitive=False,
     ),
     verbose: bool = typer.Option(
         False,
         "--verbose",
         "-v",
-        help="Подробный вывод",
+        help="Verbose output",
     ),
 ) -> None:
     """
-    Генерирует ORM модели из JSON-схемы данных.
+    Generates ORM models from JSON data schema.
 
-    Примеры:
+    Examples:
         json-to-orm generate schema.json models/ --format prisma
         json-to-orm generate schema.json models/ -f django -v
     """
     try:
         if verbose:
             console.print(
-                f"[bold blue]Генерация моделей в формате {format.upper()}[/bold blue]"
+                f"[bold blue]Generating models in {format.upper()} format[/bold blue]"
             )
-            console.print(f"Входной файл: {input_file}")
-            console.print(f"Выходная директория: {output_dir}")
+            console.print(f"Input file: {input_file}")
+            console.print(f"Output directory: {output_dir}")
 
-        # Создание экземпляра конвертера
+        # Create converter instance
         converter = JSONToORM()
 
-        # Генерация моделей
+        # Generate models
         result = converter.generate(
             input_file=str(input_file),
             output_dir=str(output_dir),
@@ -85,17 +85,17 @@ def generate(
         )
 
         if verbose:
-            console.print(f"[bold green]✓ Модели успешно сгенерированы![/bold green]")
-            console.print(f"Создано файлов: {result.files_created}")
-            console.print(f"Время выполнения: {result.execution_time:.2f}с")
+            console.print(f"[bold green]✓ Models generated successfully![/bold green]")
+            console.print(f"Files created: {result.files_created}")
+            console.print(f"Execution time: {result.execution_time:.2f}s")
         else:
             console.print(
-                f"[bold green]✓ Модели успешно сгенерированы в {output_dir}[/bold green]"
+                f"[bold green]✓ Models generated successfully in {output_dir}[/bold green]"
             )
 
     except Exception as e:
-        logger.error(f"Ошибка при генерации моделей: {e}")
-        console.print(f"[bold red]✗ Ошибка: {e}[/bold red]")
+        logger.error(f"Error generating models: {e}")
+        console.print(f"[bold red]✗ Error: {e}[/bold red]")
         sys.exit(1)
 
 
@@ -103,7 +103,7 @@ def generate(
 def validate(
     input_file: Path = typer.Argument(
         ...,
-        help="Путь к JSON-файлу для валидации",
+        help="Path to JSON file for validation",
         exists=True,
         file_okay=True,
         dir_okay=False,
@@ -112,65 +112,65 @@ def validate(
         False,
         "--verbose",
         "-v",
-        help="Подробный вывод",
+        help="Verbose output",
     ),
 ) -> None:
     """
-    Валидирует JSON-схему данных.
+    Validates JSON data schema.
 
-    Примеры:
+    Examples:
         json-to-orm validate schema.json
         json-to-orm validate schema.json -v
     """
     try:
         if verbose:
-            console.print(f"[bold blue]Валидация схемы данных[/bold blue]")
-            console.print(f"Файл: {input_file}")
+            console.print(f"[bold blue]Validating data schema[/bold blue]")
+            console.print(f"File: {input_file}")
 
-        # Создание экземпляра конвертера
+        # Create converter instance
         converter = JSONToORM()
 
-        # Валидация схемы
+        # Validate schema
         validation_result = converter.validate(str(input_file))
 
         if validation_result.is_valid:
             if verbose:
-                console.print(f"[bold green]✓ Схема валидна![/bold green]")
-                console.print(f"Количество таблиц: {validation_result.table_count}")
+                console.print(f"[bold green]✓ Schema is valid![/bold green]")
+                console.print(f"Number of tables: {validation_result.table_count}")
                 console.print(
-                    f"Количество связей: {validation_result.relationship_count}"
+                    f"Number of relationships: {validation_result.relationship_count}"
                 )
             else:
-                console.print(f"[bold green]✓ Схема валидна[/bold green]")
+                console.print(f"[bold green]✓ Schema is valid[/bold green]")
         else:
-            console.print(f"[bold red]✗ Схема содержит ошибки:[/bold red]")
+            console.print(f"[bold red]✗ Schema contains errors:[/bold red]")
             for error in validation_result.errors:
                 console.print(f"  - {error}")
             sys.exit(1)
 
     except Exception as e:
-        logger.error(f"Ошибка при валидации схемы: {e}")
-        console.print(f"[bold red]✗ Ошибка: {e}[/bold red]")
+        logger.error(f"Error validating schema: {e}")
+        console.print(f"[bold red]✗ Error: {e}[/bold red]")
         sys.exit(1)
 
 
 @app.command()
 def list_formats() -> None:
     """
-    Показывает список поддерживаемых форматов генерации.
+    Shows list of supported generation formats.
 
-    Примеры:
+    Examples:
         json-to-orm list-formats
     """
     try:
-        console.print("[bold blue]Поддерживаемые форматы генерации:[/bold blue]")
+        console.print("[bold blue]Supported generation formats:[/bold blue]")
 
         table = Table(show_header=True, header_style="bold magenta")
-        table.add_column("Формат", style="cyan")
-        table.add_column("Описание", style="white")
-        table.add_column("Расширение файла", style="green")
+        table.add_column("Format", style="cyan")
+        table.add_column("Description", style="white")
+        table.add_column("File Extension", style="green")
 
-        # Создание экземпляра конвертера для получения информации о форматах
+        # Create converter instance to get format information
         converter = JSONToORM()
         
         formats = []
@@ -189,36 +189,36 @@ def list_formats() -> None:
         console.print(table)
 
     except Exception as e:
-        logger.error(f"Ошибка при получении списка форматов: {e}")
-        console.print(f"[bold red]✗ Ошибка: {e}[/bold red]")
+        logger.error(f"Error getting format list: {e}")
+        console.print(f"[bold red]✗ Error: {e}[/bold red]")
         sys.exit(1)
 
 
 @app.command()
 def version() -> None:
     """
-    Показывает версию утилиты.
+    Shows utility version.
 
-    Примеры:
+    Examples:
         json-to-orm version
     """
     from . import __version__
 
-    console.print(f"[bold blue]JSON-to-ORM версия {__version__}[/bold blue]")
+    console.print(f"[bold blue]JSON-to-ORM version {__version__}[/bold blue]")
 
 
 def main() -> None:
     """
-    Главная функция CLI.
+    Main CLI function.
     """
     try:
         app()
     except KeyboardInterrupt:
-        console.print("\n[yellow]Операция прервана пользователем[/yellow]")
+        console.print("\n[yellow]Operation interrupted by user[/yellow]")
         sys.exit(1)
     except Exception as e:
-        logger.error(f"Неожиданная ошибка: {e}")
-        console.print(f"[bold red]Критическая ошибка: {e}[/bold red]")
+        logger.error(f"Unexpected error: {e}")
+        console.print(f"[bold red]Critical error: {e}[/bold red]")
         sys.exit(1)
 
 

@@ -1,143 +1,145 @@
 # SchemaBloom (JSON-to-ORM)
 
-CLI-утилита для генерации ORM моделей из JSON-схем. Поддерживает Prisma, Django и SQLAlchemy.
+A powerful CLI utility for generating ORM models from JSON schemas. Supports Prisma, Django, and SQLAlchemy.
 
-## 🚀 Быстрый старт
+## 🚀 Quick Start
 
 ```bash
-# Установка
-pip install json-to-orm
+# Installation from source (recommended)
+git clone https://github.com/11123aa/SchemaBloom.git
+cd SchemaBloom
+pip install -e .
 
-# Использование
-json-to-orm generate schema.json models/ --format prisma
-json-to-orm generate schema.json models/ --format django
-json-to-orm generate schema.json models/ --format sqlalchemy
+# Usage
+python -m json_to_orm generate schema.json models/ --format prisma
+python -m json_to_orm generate schema.json models/ --format django
+python -m json_to_orm generate schema.json models/ --format sqlalchemy
 
-# Примеры
-json-to-orm generate examples/sample_schema.json output/ --format prisma
-json-to-orm generate examples/sample_schema.json output/ --format django
-json-to-orm generate examples/ecommerce_schema.json output/ --format sqlalchemy
-json-to-orm validate examples/sample_schema.json
-json-to-orm list-formats
+# Examples
+python -m json_to_orm generate examples/sample_schema.json output/ --format prisma
+python -m json_to_orm generate examples/sample_schema.json output/ --format django
+python -m json_to_orm generate examples/ecommerce_schema.json output/ --format sqlalchemy
+python -m json_to_orm validate examples/sample_schema.json
+python -m json_to_orm list-formats
 ```
 
-## 🛠 Поддерживаемые ORM
+## 🛠 Supported ORMs
 
 ### Prisma
-- Полная поддержка всех типов данных Prisma
-- Автоматическая генерация связей (one-to-many, many-to-one, many-to-many)
-- Поддержка первичных ключей, уникальных полей и значений по умолчанию
-- Генерация полной Prisma схемы с настройками клиента и источника данных
+- Full support for all Prisma data types
+- Automatic relationship generation (one-to-many, many-to-one, many-to-many)
+- Support for primary keys, unique fields, and default values
+- Complete Prisma schema generation with client and datasource configuration
 
 ### Django
-- Поддержка всех типов полей Django ORM (CharField, IntegerField, TextField, etc.)
-- Автоматическая генерация связей (ForeignKey, ManyToManyField, OneToOneField)
-- Поддержка метаданных моделей (Meta класс)
-- Умная генерация метода `__str__` для моделей
-- Поддержка параметров полей (max_length, unique, null, default, help_text)
+- Support for all Django ORM field types (CharField, IntegerField, TextField, etc.)
+- Automatic relationship generation (ForeignKey, ManyToManyField, OneToOneField)
+- Model metadata support (Meta class)
+- Smart `__str__` method generation for models
+- Field parameter support (max_length, unique, null, default, help_text)
 
 ### SQLAlchemy
-- Полная поддержка всех типов данных SQLAlchemy
-- Автоматическая генерация связей (relationship)
-- Поддержка первичных ключей, уникальных полей и значений по умолчанию
-- Генерация моделей с использованием declarative_base
-- Поддержка ForeignKey и relationship связей
+- Full support for all SQLAlchemy data types
+- Automatic relationship generation (relationship)
+- Support for primary keys, unique fields, and default values
+- Model generation using declarative_base
+- ForeignKey and relationship support
 
-## 📋 Статус проекта
+## 📋 Project Status
 
-- **Статус**: Проект готов, требуется ручная публикация на PyPI
-- **Прогресс**: 98% (49/50 задач выполнено)
-- **Текущий этап**: Пакет готов к публикации
-- **Последний коммит**: Проблема с автоматической публикацией на PyPI
-- **Версия**: 1.0.0 (локально собрана)
+- **Status**: Ready for use, package prepared for PyPI publication
+- **Progress**: 98% (49/50 tasks completed)
+- **Current Stage**: Package ready for publication
+- **Last Commit**: Network issues with PyPI publication
+- **Version**: 1.0.0 (locally built)
 
-### Выполненные компоненты
-- ✅ JSON парсер и валидатор
-- ✅ Базовый генератор моделей
-- ✅ Генератор Prisma моделей (с поддержкой связей)
-- ✅ Генератор Django моделей (с поддержкой связей)
-- ✅ Генератор SQLAlchemy моделей (с поддержкой связей)
-- ✅ Система шаблонов Jinja2
-- ✅ Система логирования
-- ✅ Обработка первичных ключей и уникальных полей
-- ✅ Поддержка значений по умолчанию
-- ✅ Автоматическая генерация связей между таблицами
-- ✅ Git интеграция и версионирование
-- ✅ **Полный набор unit-тестов (83 теста)**
-- ✅ **Интеграционные тесты**
-- ✅ **Тесты обработки ошибок и граничных случаев**
+### Completed Components
+- ✅ JSON parser and validator
+- ✅ Base model generator
+- ✅ Prisma model generator (with relationship support)
+- ✅ Django model generator (with relationship support)
+- ✅ SQLAlchemy model generator (with relationship support)
+- ✅ Jinja2 template system
+- ✅ Logging system
+- ✅ Primary key and unique field handling
+- ✅ Default value support
+- ✅ Automatic table relationship generation
+- ✅ Git integration and versioning
+- ✅ **Complete unit test suite (83 tests)**
+- ✅ **Integration tests**
+- ✅ **Error handling and edge case tests**
 
-## 🔗 Ссылки
+## 🔗 Links
 
-- **Репозиторий**: https://github.com/11123aa/SchemaBloom.git
-- **PyPI**: https://pypi.org/project/json-to-orm/
+- **Repository**: https://github.com/11123aa/SchemaBloom.git
+- **PyPI**: https://pypi.org/project/json-to-orm/ (when published)
 
-## 📦 Установка
+## 📦 Installation
 
-### Установка из исходного кода (рекомендуется)
+### Installation from source (recommended)
 ```bash
-# Клонирование репозитория
+# Clone repository
 git clone https://github.com/11123aa/SchemaBloom.git
 cd SchemaBloom
 
-# Установка в режиме разработки
+# Install in development mode
 pip install -e .
 
-# Использование
+# Usage
 python -m json_to_orm --help
 ```
 
-### Установка из собранных файлов
+### Installation from built files
 ```bash
-# Скачайте файлы из репозитория (папка dist/)
-# Установка из локальных файлов
+# Download files from repository (dist/ folder)
+# Install from local files
 pip install json_to_orm-1.0.0-py3-none-any.whl
 ```
 
-### Установка из PyPI (когда будет доступно)
+### Installation from PyPI (when available)
 ```bash
-# Установка из PyPI (после публикации)
+# Install from PyPI (after publication)
 pip install json-to-orm
 ```
 
-**Примечание**: В настоящее время пакет готов к публикации на PyPI, но есть проблемы с сетевым соединением. Рекомендуется использовать установку из исходного кода.
+**Note**: Currently, the package is ready for PyPI publication but has network connection issues. Installation from source is recommended.
 
-## 🛠 Технологии
+## 🛠 Technologies
 
-- Python 3.8+ (полная совместимость с Python 3.9+)
-- Click/Typer для CLI
-- Jinja2 для шаблонов
-- jsonschema для валидации
-- Pydantic для валидации данных
-- Rich для красивого вывода в терминале
+- Python 3.8+ (full compatibility with Python 3.9+)
+- Click/Typer for CLI
+- Jinja2 for templates
+- jsonschema for validation
+- Pydantic for data validation
+- Rich for beautiful terminal output
 
-## 📖 Примеры использования
+## 📖 Usage Examples
 
-### Валидация схемы
+### Validate schema
 ```bash
-json-to-orm validate examples/sample_schema.json
+python -m json_to_orm validate examples/sample_schema.json
 ```
 
-### Генерация Prisma моделей
+### Generate Prisma models
 ```bash
-json-to-orm generate examples/sample_schema.json output/ --format prisma
+python -m json_to_orm generate examples/sample_schema.json output/ --format prisma
 ```
 
-### Генерация Django моделей
+### Generate Django models
 ```bash
-json-to-orm generate examples/sample_schema.json output/ --format django
+python -m json_to_orm generate examples/sample_schema.json output/ --format django
 ```
 
-### Генерация SQLAlchemy моделей
+### Generate SQLAlchemy models
 ```bash
-json-to-orm generate examples/sample_schema.json output/ --format sqlalchemy
+python -m json_to_orm generate examples/sample_schema.json output/ --format sqlalchemy
 ```
 
-### Просмотр доступных форматов
+### List available formats
 ```bash
-json-to-orm list-formats
+python -m json_to_orm list-formats
 ```
 
-## 📄 Лицензия
+## 📄 License
 
-MIT License - см. файл [LICENSE](LICENSE) для подробностей.
+MIT License - see [LICENSE](LICENSE) file for details.

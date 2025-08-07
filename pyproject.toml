@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "json-to-orm"
 version = "1.0.0"
-description = "CLI-утилита для генерации ORM моделей из JSON-схем"
+description = "A powerful CLI utility for generating ORM models from JSON schemas. Supports Prisma, Django, and SQLAlchemy."
 readme = "README.md"
 license = {text = "MIT"}
 authors = [
@@ -14,7 +14,7 @@ authors = [
 maintainers = [
     {name = "SchemaBloom Team", email = "team@schema-bloom.com"}
 ]
-keywords = ["orm", "json", "generator", "cli", "prisma", "django", "sqlalchemy"]
+keywords = ["orm", "json", "generator", "cli", "prisma", "django", "sqlalchemy", "database", "models", "code-generation"]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
@@ -28,6 +28,8 @@ classifiers = [
     "Topic :: Software Development :: Code Generators",
     "Topic :: Database",
     "Topic :: Utilities",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Operating System :: OS Independent",
 ]
 requires-python = ">=3.8"
 dependencies = [
@@ -62,6 +64,7 @@ json-to-orm = "json_to_orm.cli:main"
 Homepage = "https://github.com/11123aa/SchemaBloom"
 Repository = "https://github.com/11123aa/SchemaBloom.git"
 "Bug Tracker" = "https://github.com/11123aa/SchemaBloom/issues"
+Documentation = "https://github.com/11123aa/SchemaBloom/blob/main/README.md"
 
 [tool.setuptools.packages.find]
 where = ["src"]

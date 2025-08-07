@@ -36,7 +36,7 @@ class TestCLI:
         assert "INPUT_FILE" in result.output
 
     def test_generate_basic_schema(self):
-        """Тест генерации базовой схемы."""
+        """Test basic schema generation."""
         schema = {
             "tables": [
                 {
@@ -62,14 +62,14 @@ class TestCLI:
             ])
             
             assert result.exit_code == 0
-            assert "Generated" in result.output or "успешно" in result.output
+            assert "Models generated successfully" in result.output
             
-            # Проверяем, что файл создан
+            # Check that file was created
             output_file = Path(temp_dir) / "schema.prisma"
             assert output_file.exists()
 
     def test_generate_all_formats(self):
-        """Тест генерации во всех поддерживаемых форматах."""
+        """Test generation in all supported formats."""
         schema = {
             "tables": [
                 {
@@ -98,9 +98,9 @@ class TestCLI:
                 ])
                 
                 assert result.exit_code == 0
-                assert "Generated" in result.output or "успешно" in result.output
+                assert "Models generated successfully" in result.output
                 
-                # Проверяем, что файл создан
+                # Check that file was created
                 if format_type == 'prisma':
                     output_file = Path(temp_dir) / "schema.prisma"
                 else:
@@ -109,7 +109,7 @@ class TestCLI:
                 assert output_file.exists()
 
     def test_generate_with_relationships(self):
-        """Тест генерации схемы со связями."""
+        """Test schema generation with relationships."""
         schema = {
             "tables": [
                 {
@@ -153,9 +153,9 @@ class TestCLI:
             ])
             
             assert result.exit_code == 0
-            assert "Generated" in result.output or "успешно" in result.output
+            assert "Models generated successfully" in result.output
             
-            # Проверяем содержимое файла
+            # Check file content
             output_file = Path(temp_dir) / "schema.prisma"
             content = output_file.read_text()
             assert "model Users {" in content
@@ -163,7 +163,7 @@ class TestCLI:
             assert "@relation" in content
 
     def test_validate_valid_schema(self):
-        """Тест валидации корректной схемы."""
+        """Test validation of valid schema."""
         schema = {
             "tables": [
                 {
@@ -184,10 +184,10 @@ class TestCLI:
             result = self.runner.invoke(app, ['validate', str(schema_file)])
             
             assert result.exit_code == 0
-            assert "valid" in result.output.lower() or "валидна" in result.output.lower()
+            assert "Schema is valid" in result.output
 
     def test_validate_invalid_schema(self):
-        """Тест валидации невалидной схемы."""
+        """Test validation of invalid schema."""
         invalid_schema = {
             "tables": [
                 {
@@ -207,7 +207,7 @@ class TestCLI:
             result = self.runner.invoke(app, ['validate', str(schema_file)])
             
             assert result.exit_code != 0
-            assert "invalid" in result.output.lower() or "error" in result.output.lower() or "ошибки" in result.output.lower()
+            assert "Schema contains errors" in result.output or "Error" in result.output
 
     def test_generate_missing_input_file(self):
         """Тест генерации с несуществующим входным файлом."""
@@ -269,7 +269,7 @@ class TestCLI:
             assert result.exit_code == 0
 
     def test_generate_complex_schema(self):
-        """Тест генерации сложной схемы."""
+        """Test generation of complex schema."""
         complex_schema = {
             "tables": [
                 {
@@ -319,9 +319,9 @@ class TestCLI:
                 ])
                 
                 assert result.exit_code == 0
-                assert "Generated" in result.output or "успешно" in result.output
+                assert "Models generated successfully" in result.output
                 
-                # Проверяем, что файл создан и содержит ожидаемый контент
+                # Check that file was created and contains expected content
                 if format_type == 'prisma':
                     output_file = Path(temp_dir) / "schema.prisma"
                     content = output_file.read_text()
