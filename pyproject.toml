@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "json-to-orm"
 version = "1.0.0"
-description = "A powerful CLI utility for generating ORM models from JSON schemas. Supports Prisma, Django, and SQLAlchemy."
+description = "A powerful CLI utility for generating ORM models from JSON schemas. Supports Prisma, Django, and SQLAlchemy with automatic relationship generation."
 readme = "README.md"
 license = {text = "MIT"}
 authors = [
@@ -14,7 +14,12 @@ authors = [
 maintainers = [
     {name = "SchemaBloom Team", email = "team@schema-bloom.com"}
 ]
-keywords = ["orm", "json", "generator", "cli", "prisma", "django", "sqlalchemy", "database", "models", "code-generation"]
+keywords = [
+    "orm", "json", "generator", "cli", "prisma", "django", "sqlalchemy", 
+    "database", "models", "code-generation", "schema", "converter", 
+    "python", "automation", "development-tools", "database-tools",
+    "json-to-orm", "model-generator", "schema-converter", "orm-generator"
+]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
@@ -29,7 +34,12 @@ classifiers = [
     "Topic :: Database",
     "Topic :: Utilities",
     "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Software Development :: Tools",
+    "Topic :: Text Processing :: Markup",
     "Operating System :: OS Independent",
+    "Environment :: Console",
+    "Framework :: Django",
+    "Framework :: SQLAlchemy",
 ]
 requires-python = ">=3.8"
 dependencies = [
@@ -65,6 +75,8 @@ Homepage = "https://github.com/11123aa/SchemaBloom"
 Repository = "https://github.com/11123aa/SchemaBloom.git"
 "Bug Tracker" = "https://github.com/11123aa/SchemaBloom/issues"
 Documentation = "https://github.com/11123aa/SchemaBloom/blob/main/README.md"
+"Source Code" = "https://github.com/11123aa/SchemaBloom"
+"Download" = "https://github.com/11123aa/SchemaBloom/releases"
 
 [tool.setuptools.packages.find]
 where = ["src"]
